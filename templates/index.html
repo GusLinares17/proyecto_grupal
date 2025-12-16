@@ -1,18 +1,17 @@
 {% extends "base.html" %}
 
 {% block contenido %}
-<div class="contenedor">
-    <h1>Odontología Aquino</h1>
+<div class="hero">
+    <div class="hero-texto">
+        <h1>Odontología Aquino</h1>
+        <p>
+            Cuidamos tu sonrisa con atención profesional y tecnología moderna.
+            Agenda tu cita de evaluación de forma rápida y sencilla.
+        </p>
 
-    <p>
-        Bienvenido al sistema de reservas de citas de la clínica Odontología Aquino.
-        Aquí podrá agendar su cita de evaluación de manera rápida y sencilla.
-    </p>
-
-    <a href="/cita">
-        <button class="boton boton-disponible">
+        <a href="/cita" class="boton-principal">
             Agendar cita
-        </button>
-    </a>
+        </a>
+    </div>
 </div>
 {% endblock %}
