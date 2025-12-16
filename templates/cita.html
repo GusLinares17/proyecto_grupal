@@ -1,6 +1,18 @@
 {% extends "base.html" %}
 
 {% block contenido %}
-    <h2>Citas</h2>
-    <p>Agenda tu cita</p>
+<h2>Agendar cita</h2>
+<p>Seleccione el día y la hora disponible</p>
+
+<form method="POST" action="/cita">
+
+    <label>Fecha:</label><br>
+    <input type="date" name="fecha" required><br><br>
+
+    <label>Hora:</label><br>
+    <input type="time" name="hora" required><br><br>
+
+    <button type="submit">Reservar cita</button>
+
+</form>
 {% endblock %}

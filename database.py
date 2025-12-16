@@ -1,9 +1,10 @@
-import mysql.connector
+import pymysql
 
 def get_connection():
-    return mysql.connector.connect(
+    return pymysql.connect(
         host="localhost",
         user="root",
         password="root1234",
-        database="odontologia_aquino"
+        database="odontologia_aquino",
+        port=3306
     )
