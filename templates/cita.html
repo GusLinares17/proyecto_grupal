@@ -2,17 +2,31 @@
 
 {% block contenido %}
 <h2>Agendar cita</h2>
-<p>Seleccione el día y la hora disponible</p>
 
-<form method="POST" action="/cita">
-
-    <label>Fecha:</label><br>
-    <input type="date" name="fecha" required><br><br>
-
-    <label>Hora:</label><br>
-    <input type="time" name="hora" required><br><br>
-
-    <button type="submit">Reservar cita</button>
-
+<form method="GET" action="/cita">
+    <label>Seleccione un día:</label><br>
+    <input type="date" name="fecha" required>
+    <button type="submit">Ver horarios</button>
 </form>
+
+{% if fecha %}
+    <h3>Horarios disponibles para {{ fecha }}</h3>
+
+    <form method="POST" action="/cita">
+        <input type="hidden" name="fecha" value="{{ fecha }}">
+
+        {% for hora in horarios %}
+            {% if hora in ocupados %}
+                <button type="button" disabled style="background:#ccc;">
+                    {{ hora }} (Ocupado)
+                </button>
+            {% else %}
+                <button type="submit" name="hora" value="{{ hora }}">
+                    {{ hora }}
+                </button>
+            {% endif %}
+        {% endfor %}
+    </form>
+{% endif %}
+
 {% endblock %}
