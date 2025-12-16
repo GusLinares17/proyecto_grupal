@@ -1,6 +1,18 @@
 {% extends "base.html" %}
 
 {% block contenido %}
-    <h2>Bienvenido</h2>
-    <p>Sistema web de gestión de citas odontológicas.</p>
+<div class="contenedor">
+    <h1>Odontología Aquino</h1>
+
+    <p>
+        Bienvenido al sistema de reservas de citas de la clínica Odontología Aquino.
+        Aquí podrá agendar su cita de evaluación de manera rápida y sencilla.
+    </p>
+
+    <a href="/cita">
+        <button class="boton boton-disponible">
+            Agendar cita
+        </button>
+    </a>
+</div>
 {% endblock %}

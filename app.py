@@ -41,7 +41,11 @@ def cita():
             "SELECT hora FROM citas WHERE fecha = %s",
             (fecha,)
         )
-        ocupados = [h[0].strftime("%H:%M") for h in cursor.fetchall()]
+        ocupados = [
+    f"{int(h[0].seconds//3600):02d}:{int((h[0].seconds%3600)//60):02d}"
+    for h in cursor.fetchall()
+]
+
 
     # SI SE PRESIONA UN BOTÓN DE HORA
     if request.method == "POST":
