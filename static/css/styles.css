@@ -1,4 +1,49 @@
+/* ===== ESTILO GENERAL ===== */
 body {
-    font-family: Arial, sans-serif;
-    text-align: center;
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f4f6f8;
+    color: #333;
+}
+
+.contenedor {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* ===== TÍTULOS ===== */
+h1, h2, h3 {
+    color: #2c3e50;
+}
+
+/* ===== BOTONES ===== */
+.boton {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.boton-disponible {
+    background-color: #27ae60;
+    color: white;
+}
+
+.boton-ocupado {
+    background-color: #c0392b;
+    color: white;
+    cursor: not-allowed;
+}
+
+/* ===== MENSAJES ===== */
+.mensaje-ok {
+    color: #27ae60;
+    font-weight: bold;
+}
+
+.mensaje-error {
+    color: #c0392b;
+    font-weight: bold;
 }
