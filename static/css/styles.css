@@ -1,3 +1,4 @@
+/* RESET */
 * {
     margin: 0;
     padding: 0;
@@ -5,31 +6,37 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
-/* BARRA SUPERIOR */
-.top-bar {
-    background: #10c4c7;
-    color: white;
-    display: flex;
-    justify-content: space-around;
-    padding: 8px;
-    font-size: 14px;
+/* VARIABLES DE COLOR */
+:root {
+    --celeste: #10c4c7;
+    --azul: #006c8f;
 }
 
-.top-bar .social a {
+/* BARRA SUPERIOR */
+.top-bar {
+    background: var(--celeste);
     color: white;
-    margin-left: 8px;
-    text-decoration: none;
-    font-weight: bold;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 28px;
+
+    padding: 10px 5%;
+    font-size: 16px;
+    font-weight: 600;
 }
+
 
 /* HEADER */
 .main-header {
-    background: #006c8f;
+    background: var(--azul);
     color: white;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 40px;
+    padding: 15px 5%;
 }
 
 .main-header nav a {
@@ -39,40 +46,39 @@
     font-weight: bold;
 }
 
-.main-header nav a:hover {
-    text-decoration: underline;
+/* CONTENEDOR GENERAL */
+.container {
+    padding: 40px 5%;
+    min-height: calc(100vh - 200px);
 }
 
 /* HERO */
 .hero {
-    height: 500px;
-    background: url("../img/hero.jpg") center/cover no-repeat;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    height: clamp(320px, 55vh, 520px);
+
+    background: url("../img/hero.jpg") center center / contain no-repeat;
+    background-color: #eaf6f8; /* relleno cuando sobren bordes */
+
     display: flex;
     align-items: center;
-    padding-left: 60px;
 }
 
-.hero-text {
-    background: rgba(255, 255, 255, 0.85);
+
+/* FORMULARIOS (login, registro, etc.) */
+.form-container {
+    max-width: 420px;
+    margin: 60px auto;
     padding: 30px;
+    background: #f5f5f5;
     border-radius: 8px;
-}
-
-.hero-text h1 {
-    color: #006c8f;
-    font-size: 36px;
-}
-
-.hero-text .slogan {
-    margin-top: 10px;
-    font-size: 18px;
 }
 
 /* FOOTER */
 footer {
-    background: #006c8f;
+    background: var(--azul);
     color: white;
     text-align: center;
     padding: 15px;
-    margin-top: 40px;
 }

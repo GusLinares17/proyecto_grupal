@@ -3,18 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Odontología Aquino</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
 
 <!-- BARRA SUPERIOR -->
 <div class="top-bar">
-    <div>
-        📞 SEDE MARIANO MELGAR <strong>948 296 276</strong>
-    </div>
-    <div>
-        📞 SEDE SIMÓN BOLÍVAR <strong>920 551 702</strong>
-    </div>
+    <div>📞 SEDE MARIANO MELGAR <strong>948 296 276</strong></div>
+    <div>📞 SEDE SIMÓN BOLÍVAR <strong>920 551 702</strong></div>
     <div class="social">
         SÍGUENOS
         <a href="https://www.facebook.com/profile.php?id=100057601592425" target="_blank">FB</a>
@@ -22,11 +19,9 @@
     </div>
 </div>
 
-<!-- MENÚ PRINCIPAL -->
+<!-- HEADER -->
 <header class="main-header">
-    <div class="logo">
-        <strong>ODONTOLOGÍA AQUINO</strong>
-    </div>
+    <div class="logo">ODONTOLOGÍA AQUINO</div>
     <nav>
         <a href="/">Inicio</a>
         <a href="/cita">Citas</a>
@@ -36,7 +31,7 @@
 </header>
 
 <!-- CONTENIDO -->
-<main>
+<main class="container">
     {% block contenido %}{% endblock %}
 </main>
 
