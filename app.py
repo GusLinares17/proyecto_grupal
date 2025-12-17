@@ -1,10 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 from database import get_connection
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 
 app = Flask(__name__)
+app.secret_key = "clave_secreta_simple"
 
 # ---------- RUTAS PRINCIPALES ----------
 
@@ -16,9 +17,39 @@ def inicio():
 def nosotros():
     return render_template("nosotros.html")
 
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def login():
+    if request.method == "POST":
+        correo = request.form["correo"]
+        password = request.form["password"]
+
+        conexion = get_connection()
+        cursor = conexion.cursor()
+
+        cursor.execute(
+            "SELECT id_usuario, nombre, rol FROM usuarios WHERE correo=%s AND contraseña=%s",
+            (correo, password)
+        )
+
+        usuario = cursor.fetchone()
+
+        cursor.close()
+        conexion.close()
+
+        if usuario:
+            session["id_usuario"] = usuario[0]
+            session["nombre"] = usuario[1]
+            session["rol"] = usuario[2]
+
+            return redirect(url_for("cita"))
+        else:
+            return render_template(
+                "login.html",
+                error="Correo o contraseña incorrectos"
+            )
+
     return render_template("login.html")
+
 
 @app.route("/registro", methods=["GET", "POST"])
 def registro():
@@ -45,61 +76,92 @@ def registro():
 
 
 
-from flask import request
+
+from datetime import datetime, timedelta
+from flask import session, request, redirect, url_for, render_template
+from database import get_connection
 
 @app.route("/cita", methods=["GET", "POST"])
 def cita():
-    horarios = ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00", "17:00", "18:00"]
+
+    # SOLO LOGUEADOS
+    if "id_usuario" not in session:
+        return redirect(url_for("login"))
+
+    id_usuario = session["id_usuario"]
+
+    conexion = get_connection()
+    cursor = conexion.cursor()
+
+    # VER SI YA TIENE CITA
+    cursor.execute(
+        "SELECT fecha, hora FROM citas WHERE id_usuario=%s",
+        (id_usuario,)
+    )
+    cita_usuario = cursor.fetchone()
+
+    if cita_usuario:
+        cursor.close()
+        conexion.close()
+        return render_template(
+            "cita.html",
+            ya_tiene_cita=True,
+            cita=cita_usuario
+        )
+
+    # HORARIOS FIJOS
+    horarios = [
+        "09:00", "10:00", "11:00",
+        "14:00", "15:00", "16:00", "17:00", "18:00"
+    ]
+
     fecha = request.args.get("fecha")
+
     ocupados = []
 
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    # SI SE ENVÍA UNA FECHA → CARGAR HORARIOS OCUPADOS
+    # SI YA SE ELIGIÓ FECHA → VER OCUPADOS
     if fecha:
         cursor.execute(
-            "SELECT hora FROM citas WHERE fecha = %s",
+            "SELECT hora FROM citas WHERE fecha=%s",
             (fecha,)
         )
-        ocupados = [
-    f"{int(h[0].seconds//3600):02d}:{int((h[0].seconds%3600)//60):02d}"
-    for h in cursor.fetchall()
-]
+        ocupados = [h[0].strftime("%H:%M") for h in cursor.fetchall()]
 
-
-    # SI SE PRESIONA UN BOTÓN DE HORA
+    # CUANDO ELIGE HORARIO
     if request.method == "POST":
         fecha = request.form["fecha"]
         hora = request.form["hora"]
 
-        cursor.execute(
-            "SELECT COUNT(*) FROM citas WHERE fecha = %s AND hora = %s",
-            (fecha, hora)
-        )
-        ocupado = cursor.fetchone()[0]
-
-        if ocupado == 0:
-            cursor.execute(
-                "INSERT INTO citas (id_usuario, id_odontologo, fecha, hora, estado) "
-                "VALUES (%s, %s, %s, %s, %s)",
-                (2, 1, fecha, hora, "reservada")
+        # VALIDAR LUNES A VIERNES
+        dia = datetime.strptime(fecha, "%Y-%m-%d").weekday()
+        if dia > 4:
+            cursor.close()
+            conexion.close()
+            return render_template(
+                "cita.html",
+                error="Solo se atiende de lunes a viernes"
             )
-            conn.commit()
+
+        cursor.execute(
+            "INSERT INTO citas (id_usuario, fecha, hora) VALUES (%s, %s, %s)",
+            (id_usuario, fecha, hora)
+        )
+        conexion.commit()
 
         cursor.close()
-        conn.close()
-        return redirect(url_for("cita", fecha=fecha))
+        conexion.close()
+        return redirect(url_for("cita"))
 
     cursor.close()
-    conn.close()
+    conexion.close()
 
     return render_template(
         "cita.html",
-        fecha=fecha,
         horarios=horarios,
-        ocupados=ocupados
+        ocupados=ocupados,
+        fecha=fecha
     )
+
 
 @app.route("/admin")
 def admin():
