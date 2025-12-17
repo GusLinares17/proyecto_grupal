@@ -20,9 +20,30 @@ def nosotros():
 def login():
     return render_template("login.html")
 
-@app.route("/registro")
+@app.route("/registro", methods=["GET", "POST"])
 def registro():
+    if request.method == "POST":
+        nombre = request.form["nombre"]
+        correo = request.form["correo"]
+        password = request.form["password"]
+
+        conexion = get_connection()
+        cursor = conexion.cursor()
+
+        cursor.execute(
+            "INSERT INTO usuarios (nombre, correo, contraseña, rol) VALUES (%s, %s, %s, %s)",
+            (nombre, correo, password, "paciente")
+        )
+
+        conexion.commit()
+        cursor.close()
+        conexion.close()
+
+        return redirect(url_for("login"))
+
     return render_template("registro.html")
+
+
 
 from flask import request
 
