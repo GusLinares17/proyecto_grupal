@@ -1,45 +1,78 @@
-/* ===== HERO PRINCIPAL ===== */
-.hero {
-    background: linear-gradient(
-        to right,
-        #0097a7,
-        #00bcd4
-    );
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* BARRA SUPERIOR */
+.top-bar {
+    background: #10c4c7;
     color: white;
-    padding: 80px 20px;
+    display: flex;
+    justify-content: space-around;
+    padding: 8px;
+    font-size: 14px;
 }
 
-.hero-texto {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.hero h1 {
-    font-size: 42px;
-    margin-bottom: 20px;
-}
-
-.hero p {
-    font-size: 18px;
-    line-height: 1.6;
-    margin-bottom: 30px;
-}
-
-/* ===== BOTÓN PRINCIPAL ===== */
-.boton-principal {
-    display: inline-block;
-    background-color: white;
-    color: #0097a7;
-    padding: 14px 28px;
-    font-weight: bold;
+.top-bar .social a {
+    color: white;
+    margin-left: 8px;
     text-decoration: none;
-    border-radius: 30px;
-    transition: background 0.3s, color 0.3s;
+    font-weight: bold;
 }
 
-.boton-principal:hover {
-    background-color: #006978;
+/* HEADER */
+.main-header {
+    background: #006c8f;
     color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
 }
 
+.main-header nav a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+    font-weight: bold;
+}
+
+.main-header nav a:hover {
+    text-decoration: underline;
+}
+
+/* HERO */
+.hero {
+    height: 500px;
+    background: url("../img/hero.jpg") center/cover no-repeat;
+    display: flex;
+    align-items: center;
+    padding-left: 60px;
+}
+
+.hero-text {
+    background: rgba(255, 255, 255, 0.85);
+    padding: 30px;
+    border-radius: 8px;
+}
+
+.hero-text h1 {
+    color: #006c8f;
+    font-size: 36px;
+}
+
+.hero-text .slogan {
+    margin-top: 10px;
+    font-size: 18px;
+}
+
+/* FOOTER */
+footer {
+    background: #006c8f;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    margin-top: 40px;
 }
