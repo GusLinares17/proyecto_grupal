@@ -1,10 +1,13 @@
 {% extends "base.html" %}
 
 {% block contenido %}
+
 <section class="hero">
-    <div class="hero-content">
-        <h1>Diseñamos tu sonrisa</h1>
-        <p>Limpieza y salud en tu boca</p>
-    </div>
+    <img src="{{ url_for('static', filename='img/hero.jpg') }}" alt="Odontología Aquino">
 </section>
+
+<section class="frase">
+    Limpieza y salud en tu boca
+</section>
+
 {% endblock %}

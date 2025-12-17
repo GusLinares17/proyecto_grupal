@@ -3,82 +3,152 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: "Segoe UI", Arial, sans-serif;
 }
 
-/* VARIABLES DE COLOR */
-:root {
-    --celeste: #10c4c7;
-    --azul: #006c8f;
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-/* BARRA SUPERIOR */
+/* TOP BAR */
 .top-bar {
-    background: var(--celeste);
+    background: #12c7c7;
     color: white;
-
+    padding: 10px 40px;
     display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 28px;
-
-    padding: 10px 5%;
-    font-size: 16px;
-    font-weight: 600;
+    justify-content: space-between;
+    font-size: 22px;
 }
 
-
-/* HEADER */
-.main-header {
-    background: var(--azul);
-    color: white;
+.top-left {
     display: flex;
-    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.top-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.top-right i {
+    font-size: 18px;
+    color: white;
+}
+
+/* NAVBAR */
+.navbar {
+    background: #006b8f;
+    color: white;
+    padding: 16px 40px;
+    display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 5%;
 }
 
-.main-header nav a {
-    color: white;
-    text-decoration: none;
-    margin-left: 20px;
+.logo {
+    font-size: 22px;
     font-weight: bold;
 }
 
-/* CONTENEDOR GENERAL */
-.container {
-    padding: 40px 5%;
-    min-height: calc(100vh - 200px);
+.menu {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+.menu a {
+    color: white;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+/* CONTENIDO */
+.contenido {
+    flex: 1;
 }
 
 /* HERO */
-.hero {
-    width: 100vw;
-    margin-left: calc(-50vw + 50%);
-    height: clamp(320px, 55vh, 520px);
-
-    background: url("../img/hero.jpg") center center / contain no-repeat;
-    background-color: #eaf6f8; /* relleno cuando sobren bordes */
-
-    display: flex;
-    align-items: center;
+.hero img {
+    width: 100%;
+    height: auto;
+    max-height: 550px;
+    object-fit: contain;   /* NO corta caras */
+    background: #eef7f8;
 }
 
-
-/* FORMULARIOS (login, registro, etc.) */
-.form-container {
-    max-width: 420px;
-    margin: 60px auto;
-    padding: 30px;
-    background: #f5f5f5;
-    border-radius: 8px;
+/* FRASE */
+.frase {
+    text-align: center;
+    font-size: 26px;
+    font-weight: 600;
+    color: #006b8f;
+    padding: 30px 0;
 }
 
 /* FOOTER */
 footer {
-    background: var(--azul);
+    background: #006b8f;
     color: white;
     text-align: center;
     padding: 15px;
+    font-size: 15px;
+}
+
+
+
+/* ==============================
+   FORMULARIOS (REGISTRO / LOGIN)
+============================== */
+.form-container {
+    max-width: 420px;
+    margin: 80px auto;
+    padding: 40px;
+
+    background: #f5f5f5;
+    border-radius: 14px;
+}
+
+.form-container h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 26px;
+    color: #006b8f;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 18px;
+}
+
+.campo label {
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.campo input {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.btn-principal {
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    font-weight: bold;
+
+    background: #006b8f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-principal:hover {
+    background: #00506b;
 }

@@ -3,43 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <title>Odontología Aquino</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- ICONOS POR DEFECTO (NO IMÁGENES) -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
 
 <!-- BARRA SUPERIOR -->
 <div class="top-bar">
-    <div>📞 SEDE MARIANO MELGAR <strong>948 296 276</strong></div>
-    <div>📞 SEDE SIMÓN BOLÍVAR <strong>920 551 702</strong></div>
-    <div class="social">
-        SÍGUENOS
-        <a href="https://www.facebook.com/profile.php?id=100057601592425" target="_blank">FB</a>
-        <a href="#">IG</a>
+    <div class="top-left">
+        📞 SEDE MARIANO MELGAR 948 296 276
+        &nbsp;&nbsp;
+        📞 SEDE SIMÓN BOLÍVAR 920 551 702
+    </div>
+
+    <div class="top-right">
+        <span>SÍGUENOS</span>
+        <a href="https://www.facebook.com/profile.php?id=100057601592425" target="_blank">
+            <i class="fa-brands fa-facebook-f"></i>
+        </a>
+        <a href="#">
+            <i class="fa-brands fa-instagram"></i>
+        </a>
     </div>
 </div>
 
-<!-- HEADER -->
-<header class="main-header">
+<!-- NAV -->
+<nav class="navbar">
     <div class="logo">ODONTOLOGÍA AQUINO</div>
-    <nav>
-        <a href="/">Inicio</a>
-        <a href="/cita">Citas</a>
-        <a href="/login">Login</a>
-        <a href="/registro">Registro</a>
-    </nav>
-</header>
+    <ul class="menu">
+        <li><a href="/">Inicio</a></li>
+        <li><a href="/cita">Citas</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/registro">Registro</a></li>
+    </ul>
+</nav>
 
 <!-- CONTENIDO -->
-<main class="container">
+<main class="contenido">
     {% block contenido %}{% endblock %}
 </main>
 
 <!-- FOOTER -->
 <footer>
-    © Copyright 2025 – ODONTOLOGÍA AQUINO  
-    RUC 1029569488
+    © Copyright 2025 – ODONTOLOGÍA AQUINO RUC 1029569488
 </footer>
 
 </body>
 </html>
+
+
