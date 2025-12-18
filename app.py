@@ -1,8 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from database import get_connection
-from datetime import datetime, timedelta
-
-
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = "clave_secreta_simple"
@@ -17,6 +15,8 @@ def inicio():
 def nosotros():
     return render_template("nosotros.html")
 
+
+# ---------- LOGIN ----------
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -27,7 +27,7 @@ def login():
         cursor = conexion.cursor()
 
         cursor.execute(
-            "SELECT id_usuario, nombre, rol FROM usuarios WHERE correo=%s AND contraseña=%s",
+            "SELECT id_usuario, nombre, rol FROM usuarios WHERE correo=%s AND contrasena=%s",
             (correo, password)
         )
 
@@ -41,7 +41,11 @@ def login():
             session["nombre"] = usuario[1]
             session["rol"] = usuario[2]
 
-            return redirect(url_for("cita"))
+            # REDIRECCIÓN SEGÚN ROL
+            if usuario[2] == "admin":
+                return redirect(url_for("admin"))
+            else:
+                return redirect(url_for("cita"))
         else:
             return render_template(
                 "login.html",
@@ -51,6 +55,8 @@ def login():
     return render_template("login.html")
 
 
+
+# ---------- REGISTRO ----------
 @app.route("/registro", methods=["GET", "POST"])
 def registro():
     if request.method == "POST":
@@ -62,7 +68,7 @@ def registro():
         cursor = conexion.cursor()
 
         cursor.execute(
-            "INSERT INTO usuarios (nombre, correo, contraseña, rol) VALUES (%s, %s, %s, %s)",
+            "INSERT INTO usuarios (nombre, correo, contrasena, rol) VALUES (%s, %s, %s, %s)",
             (nombre, correo, password, "paciente")
         )
 
@@ -75,16 +81,10 @@ def registro():
     return render_template("registro.html")
 
 
-
-
-from datetime import datetime, timedelta
-from flask import session, request, redirect, url_for, render_template
-from database import get_connection
-
+# ---------- CITAS ----------
 @app.route("/cita", methods=["GET", "POST"])
 def cita():
 
-    # SOLO LOGUEADOS
     if "id_usuario" not in session:
         return redirect(url_for("login"))
 
@@ -93,7 +93,6 @@ def cita():
     conexion = get_connection()
     cursor = conexion.cursor()
 
-    # VER SI YA TIENE CITA
     cursor.execute(
         "SELECT fecha, hora FROM citas WHERE id_usuario=%s",
         (id_usuario,)
@@ -109,37 +108,71 @@ def cita():
             cita=cita_usuario
         )
 
-    # HORARIOS FIJOS
     horarios = [
         "09:00", "10:00", "11:00",
         "14:00", "15:00", "16:00", "17:00", "18:00"
     ]
 
     fecha = request.args.get("fecha")
-
     ocupados = []
 
-    # SI YA SE ELIGIÓ FECHA → VER OCUPADOS
     if fecha:
         cursor.execute(
             "SELECT hora FROM citas WHERE fecha=%s",
             (fecha,)
         )
-        ocupados = [h[0].strftime("%H:%M") for h in cursor.fetchall()]
 
-    # CUANDO ELIGE HORARIO
+        for fila in cursor.fetchall():
+            hora_db = fila[0]
+            if hasattr(hora_db, "strftime"):
+                ocupados.append(hora_db.strftime("%H:%M"))
+            else:
+                total = int(hora_db.total_seconds())
+                h = total // 3600
+                m = (total % 3600) // 60
+                ocupados.append(f"{h:02d}:{m:02d}")
+
     if request.method == "POST":
         fecha = request.form["fecha"]
         hora = request.form["hora"]
 
-        # VALIDAR LUNES A VIERNES
         dia = datetime.strptime(fecha, "%Y-%m-%d").weekday()
         if dia > 4:
             cursor.close()
             conexion.close()
             return render_template(
                 "cita.html",
-                error="Solo se atiende de lunes a viernes"
+                error="Solo se atiende de lunes a viernes",
+                horarios=horarios,
+                ocupados=ocupados,
+                fecha=fecha
+            )
+
+        if hora not in horarios:
+            cursor.close()
+            conexion.close()
+            return render_template(
+                "cita.html",
+                error="Horario no permitido",
+                horarios=horarios,
+                ocupados=ocupados,
+                fecha=fecha
+            )
+
+        cursor.execute(
+            "SELECT COUNT(*) FROM citas WHERE fecha=%s AND hora=%s",
+            (fecha, hora)
+        )
+
+        if cursor.fetchone()[0] > 0:
+            cursor.close()
+            conexion.close()
+            return render_template(
+                "cita.html",
+                error="Horario ya ocupado",
+                horarios=horarios,
+                ocupados=ocupados,
+                fecha=fecha
             )
 
         cursor.execute(
@@ -163,25 +196,65 @@ def cita():
     )
 
 
+# ---------- ADMIN ----------
 @app.route("/admin")
 def admin():
-    return render_template("admin.html")
 
+    if "id_usuario" not in session:
+        return redirect(url_for("login"))
 
-# ---------- RUTA DE PRUEBA BD ----------
-# ESTA RUTA ES SOLO PARA VERIFICAR CONEXIÓN
-@app.route("/test_db")
-def test_db():
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM odontologos")
-    datos = cursor.fetchall()
+    if session.get("rol") != "admin":
+        return redirect(url_for("inicio"))
+
+    conexion = get_connection()
+    cursor = conexion.cursor()
+
+    cursor.execute("""
+        SELECT c.id_cita, c.fecha, c.hora, u.nombre
+        FROM citas c
+        JOIN usuarios u ON c.id_usuario = u.id_usuario
+        ORDER BY c.fecha, c.hora
+    """)
+
+    citas = cursor.fetchall()
+
     cursor.close()
-    conn.close()
-    return str(datos)
+    conexion.close()
+
+    return render_template("admin.html", citas=citas)
+
+
+@app.route("/admin/eliminar/<int:id_cita>")
+def eliminar_cita(id_cita):
+
+    if "id_usuario" not in session or session.get("rol") != "admin":
+        return redirect(url_for("login"))
+
+    conexion = get_connection()
+    cursor = conexion.cursor()
+
+    cursor.execute(
+        "DELETE FROM citas WHERE id_cita=%s",
+        (id_cita,)
+    )
+    conexion.commit()
+
+    cursor.close()
+    conexion.close()
+
+    return redirect(url_for("admin"))
+
+
+# ---------- LOGOUT ----------
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("inicio"))
 
 
 # ---------- EJECUCIÓN ----------
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
+
+
 

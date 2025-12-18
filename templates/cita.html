@@ -21,7 +21,13 @@
         <form method="GET">
             <label>Selecciona un día</label>
             <input type="date" name="fecha" required>
-            <button class="btn-principal" type="submit">Ver horarios</button>
+
+            <!-- MENSAJE JS -->
+            <p id="mensaje-fecha" style="margin-top:10px; color:#006b8f;"></p>
+
+            <button class="btn-principal" type="submit">
+                Ver horarios
+            </button>
         </form>
 
         {% if fecha %}
@@ -50,3 +56,4 @@
 </div>
 
 {% endblock %}
+

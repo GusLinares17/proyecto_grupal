@@ -1,0 +1,20 @@
+services:
+
+  db:
+    image: mysql:8.0
+    container_name: mysql_odontologia
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root1234
+      MYSQL_DATABASE: odontologia_aquino
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  web:
+    build: .
+    container_name: flask_odontologia
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "5000:5000"
