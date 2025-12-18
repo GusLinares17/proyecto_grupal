@@ -1,2 +1,38 @@
+{% extends "base.html" %}
 
+{% block contenido %}
+
+<div class="form-container">
+    <h2>Panel de Administración</h2>
+
+    {% if citas %}
+        <table style="width:100%; border-collapse:collapse;">
+            <tr style="background:#006b8f; color:white;">
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Paciente</th>
+                <th>Acción</th>
+            </tr>
+
+            {% for c in citas %}
+            <tr style="border-bottom:1px solid #ccc;">
+                <td>{{ c[1] }}</td>
+                <td>{{ c[2] }}</td>
+                <td>{{ c[3] }}</td>
+                <td>
+                    <a href="/admin/eliminar/{{ c[0] }}"
+                       class="btn-eliminar"
+                       style="color:red; font-weight:bold;">
+                        Cancelar
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No hay citas registradas.</p>
+    {% endif %}
+</div>
+
+{% endblock %}
 
